@@ -6,9 +6,9 @@
     <style type="text/css">
       body{background:#000;color:#fff;margin:0;padding:0;text-rendering:optimizeLegibility;}
       pre{margin:0;padding:0;}
-      body,pre,input{font:16px/1.0 'Inconsolata',monospace;}
-      #input{display:block;position:absolute;bottom:16px;right:16px;width:800px;}
-      #output{margin:16px;overflow:none;}
+      body,pre,input{font:18px/1.0 'Inconsolata',monospace;}
+      #input{border:0;bottom:0;display:block;left:0px;padding:18px;position:absolute;}
+      #output{padding:18px;overflow:auto;}
       .ansi-1{font-weight:bold;}/*bold*/
       .ansi-30{color:#4e4e4e;}/*black*/
       .ansi-31{color:#ff6c60;}/*red*/
@@ -21,7 +21,7 @@
     </style>
   </head>
   <body>
-    <pre id="output">Welcome to multi-repl. Type something into the input below!
+    <pre id="output">Welcome to multi-repl. Type something below!
 
 </pre>
     <form id="form"><input id="input" /></form>
@@ -59,20 +59,27 @@
       var input = dojo.query('#input');
       var output = dojo.query('#output');
 
+      input[0].focus();
+
       output.style({
-        height: innerHeight-32 +'px',
-        width: innerWidth-32 + 'px'
+        height: innerHeight - 36 - 36 - 18 +'px',
+        width: innerWidth - 36 + 'px'
+      });
+
+      input.style({
+        width: innerWidth-36 + 'px'
       });
 
       var socket = new io.Socket('localhost', { port: 1337 });
-      socket.on('message', function(message){ append(message); });
+      socket.on('message', function(message){
+        append(ansi2html(message));
+      });
       socket.connect();
 
       form.connect('submit', function(e){
         e.preventDefault();
         var message = input.attr('value');
         input.attr('value', '');
-        append(message + "\n");
         socket.send(message);
       });
     </script>
