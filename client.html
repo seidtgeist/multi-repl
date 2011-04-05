@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <title>multi-repl</title>
+    <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+      body{background:#000;color:#fff;margin:0;padding:0;text-rendering:optimizeLegibility;}
+      pre{margin:0;padding:0;}
+      body,pre,input{font:16px/1.0 'Inconsolata',monospace;}
+      #input{display:block;position:absolute;bottom:16px;right:16px;width:800px;}
+      #output{margin:16px;overflow:none;}
+      .ansi-1{font-weight:bold;}/*bold*/
+      .ansi-30{color:#4e4e4e;}/*black*/
+      .ansi-31{color:#ff6c60;}/*red*/
+      .ansi-32{color:#a8ff60;}/*green*/
+      .ansi-33{color:#ffffb6;}/*yellow*/
+      .ansi-34{color:#96cbfe;}/*blue*/
+      .ansi-35{color:#ff73fd;}/*magenta*/
+      .ansi-36{color:#c6c5fe;}/*cyan*/
+      .ansi-37{color:#eeeeee;}/*white*/
+    </style>
+  </head>
+  <body>
+    <pre id="output">Welcome to multi-repl. Type something into the input below!
+
+</pre>
+    <form id="form"><input id="input" /></form>
+    <script src="/dojo.js"></script>
+    <script src="/socket.io.min.js"></script>
+    <script>
+     function ansi2html(message){
+       var open_tags = 0;
+       return message
+         .replace(/</g, '&lt;')
+         .replace(/>/g, '&gt;')
+         .replace(/\033\[([?\d;]+)m/g,
+           function(str, codes){
+             return dojo.map(codes.split(';'), function(code){
+               if (code === '0' && open_tags > 0){
+                 var closing_tags = '';
+                 while(open_tags--){
+                   closing_tags += '</span>';
+                 }
+                 return closing_tags;
+               }else{
+                 open_tags++;
+                 return '<span class="ansi-' + code + '">';
+               }
+             }).join('');
+           });
+     }
+
+      function append(message){
+        var fragment = dojo._toDom(message);
+        dojo.place(fragment, output[0]);
+      }
+
+      var form = dojo.query('#form');
+      var input = dojo.query('#input');
+      var output = dojo.query('#output');
+
+      output.style({
+        height: innerHeight-32 +'px',
+        width: innerWidth-32 + 'px'
+      });
+
+      var socket = new io.Socket('localhost', { port: 1337 });
+      socket.on('message', function(message){ append(message); });
+      socket.connect();
+
+      form.connect('submit', function(e){
+        e.preventDefault();
+        var message = input.attr('value');
+        input.attr('value', '');
+        append(message + "\n");
+        socket.send(message);
+      });
+    </script>
+  </body>
+</html>
