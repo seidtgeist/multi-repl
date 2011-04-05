@@ -36,28 +36,36 @@ var server = http.createServer(function(req, res){
 });
 server.listen(1337, '0.0.0.0');
 
-// kinda works: clj, irb, ipython
+// kinda works: clj, irb, ipython, ghci
 // doesnt work: v8, node, spidermonkey
-// not tested: ghci
 var repl = spawn('clj');
 repl.stdout.setEncoding('utf8');
 repl.stderr.setEncoding('utf8');
 repl.on('exit', function(){
 	console.log('repl died');
 });
-var socket = io.listen(server);
+var socket = io.listen(server, { log: false });
+var buffer = '';
 
 repl.stdout.on('data', function(data){
+	buffer += data;
+	process.stdout.write(data);
 	socket.broadcast(data);
 });
 
 repl.stderr.on('data', function(data){
+	buffer += data;
 	// CAUTION, JUST THE EFFIN' ERROR HANDLER
+	process.stdout.write(data);
 	socket.broadcast(data);
 });
 
 socket.on('connection', function(client){
+	client.send(buffer);
 	client.on('message', function(message){
-		repl.stdin.write(message + "\r\n");
+		process.stdout.write(message + "\n")
+		repl.stdin.write(message + "\n");
+		buffer += message + "\n";
+		socket.broadcast(message + "\n");
 	});
 });
