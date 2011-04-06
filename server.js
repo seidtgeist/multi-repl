@@ -2,8 +2,10 @@ var fs = require('fs');
 var http = require('http');
 var io = require('socket.io');
 var spawn = require('child_process').spawn;
+var tty = require('./fixed_tty');
 var url = require('url');
 
+// try tty module for emulating a real term
 // make it work
 // add connecting users into current repl
 // add session & differnt repls, i.e.: /v8/$session_id
@@ -34,38 +36,32 @@ var server = http.createServer(function(req, res){
 	}
 	res.end();
 });
-server.listen(1337, '0.0.0.0');
+server.listen(1337, '127.0.0.1');
 
 // kinda works: clj, irb, ipython, ghci
 // doesnt work: v8, node, spidermonkey
-var repl = spawn('clj');
-repl.stdout.setEncoding('utf8');
-repl.stderr.setEncoding('utf8');
+var tty_repl = tty.open('bash');
+//var repl = spawn('ipython');
+var stream = tty_repl[0];
+var repl = tty_repl[1];
+//stream.setEncoding('utf8');
 repl.on('exit', function(){
 	console.log('repl died');
 });
 var socket = io.listen(server, { log: false });
 var buffer = '';
-
-repl.stdout.on('data', function(data){
+stream.on('data', function(data){
 	buffer += data;
-	process.stdout.write(data);
-	socket.broadcast(data);
-});
-
-repl.stderr.on('data', function(data){
-	buffer += data;
-	// CAUTION, JUST THE EFFIN' ERROR HANDLER
-	process.stdout.write(data);
+//	process.stdout.write(data);
 	socket.broadcast(data);
 });
 
 socket.on('connection', function(client){
 	client.send(buffer);
 	client.on('message', function(message){
-		process.stdout.write(message + "\n")
-		repl.stdin.write(message + "\n");
-		buffer += message + "\n";
+//		process.stdout.write(message + "\n")
+		stream.write(message + "\n");
+//		buffer += message + "\n";
 		socket.broadcast(message + "\n");
 	});
 });
