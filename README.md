@@ -24,14 +24,36 @@ Obvious word of caution
 Be careful about who you give access to the service.
 There are no filters or permissions (yet)!
 
+Ideas
+-----
+
+### Expose a list of connected users inside the REPL session
+
+For JS this could look like:
+
+    // Initially
+    repl.write("window.MultiRepl = { users: {} };\n");
+
+    // When someone connects
+    socket.on('connection', function(client){
+        var sid = client.sessionId;
+        repl.write('window.MultiRepl.users[' + sid + '] = { ip: '1.2.3.4' }';');
+    });
+
+Basically it's about exposing the nature of multi-repl inside the repl.
+Could be fun.
+
 List of REPLs
 -------------
 
-- clj
-- ghci
+Here's a list of some REPLs which could be integrated into the UI.
+Diverging homebrew/pip/gem package names are next to the repl's name.
+
+- clj (clojure)
+- ghci (ghc)
 - ipython
-- irb
-- js
+- irb (ruby)
+- js (spidermonkey)
 - node
 - python
 - sbcl
