@@ -15,6 +15,10 @@ _You win the game if you manage to lock everyone else out._
 Getting started
 ---------------
 
+Please use npm >1.0.1rc0
+
+    cd multi-repl
+    npm install
     node server.js
     open http://localhost:1337
 
