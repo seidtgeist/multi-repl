@@ -40,14 +40,14 @@ For JS this could look like:
         repl.write('window.MultiRepl.users[' + sid + '] = { ip: '1.2.3.4' }';');
     });
 
+Basically it's about exposing the nature of multi-repl inside the repl.
+Could be fun.
+
 ### Ability to spawn different REPLs and more than one session
 
 Quick idea for possible feature & URL design:
 
     http://multi-repl-host/<repl_id>/<session_id>/
-
-Basically it's about exposing the nature of multi-repl inside the repl.
-Could be fun.
 
 List of REPLs
 -------------
