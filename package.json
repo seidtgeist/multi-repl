@@ -1,0 +1,21 @@
+{
+  "name": "multi-repl",
+  "description": "A shared REPL (read-eval-print loop) for fun and profit!",
+  "version": "0.1.0",
+  "homepage": "https://github.com/evilhackerdude/multi-repl",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/evilhackerdude/multi-repl.git"
+  },
+  "author": "Stephan Seidt",
+  "main": "server.js",
+  "dependencies" : {
+    "socket.io" : "0.6.17"
+  },
+  "directories": {
+    "lib": "."
+  },
+  "engines": {
+    "node": "0.4.5"
+  }
+}
