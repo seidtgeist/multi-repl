@@ -5,33 +5,28 @@ var spawn = require('child_process').spawn;
 var tty = require('./fixed_tty');
 var url = require('url');
 
-var files = {
-	client: fs.readFileSync('client.html', 'utf8'),
-	dojo: fs.readFileSync('dojo.js', 'utf8'),
-	socket_io: fs.readFileSync('socket.io.min.js', 'utf8')
+var routes = {
+	'/':
+	  [200, 'text/html', fs.readFileSync('client.html', 'utf8')],
+	'/dojo.js':
+	  [200, 'application/json', fs.readFileSync('dojo.js', 'utf8')],
+	'/socket.io.min.js':
+	  [200, 'application/json', fs.readFileSync('socket.io.min.js', 'utf8')],
+	not_found:
+	  [404, 'text/plain', 'Not found.']
 };
 
 var server = http.createServer(function(req, res){
 	req.setEncoding('utf8');
 	var path = url.parse(req.url).pathname;
-	switch (path){
-	case '/':
-		res.writeHead(200, { 'Content-Type': 'text/html' });
-		res.end(files.client);
-	case '/dojo.js':
-		res.writeHead(200, { 'Content-Type': 'application/javascript' });
-		res.end(files.dojo);
-	case '/socket.io.min.js':
-		res.writeHead(200, { 'Content-Type': 'application/javascript' });
-		res.end(files.socket_io);
-	default:
-		res.end('404');
-	}
+	var route = routes[path] || routes.not_found;
+	res.writeHead(route[0], { 'Content-Type': route[1] });
+	res.end(route[2]);
 });
 
 server.listen(1337, '127.0.0.1');
 
-var tty_handle = tty.open('v8');
+var tty_handle = tty.open('ipython');
 var stream = tty_handle[0];
 var repl = tty_handle[1];
 
