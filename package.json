@@ -1,7 +1,7 @@
 {
   "name": "multi-repl",
   "description": "A shared REPL (read-eval-print loop) for fun and profit!",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "homepage": "https://github.com/evilhackerdude/multi-repl",
   "repository": {
     "type": "git",

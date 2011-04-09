@@ -53,6 +53,15 @@ Quick idea for possible feature & URL design:
 
     http://multi-repl-host/<repl_id>/<session_id>/
 
+### API ideas
+
+- `GET /id`
+- `GET /id/stdout`
+- `GET /id/stderr`
+- `POST /id`
+- `POST /id/stdin`
+- `DELETE /id`
+
 List of REPLs
 -------------
 
