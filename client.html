@@ -5,9 +5,6 @@
     <meta name="viewport" content="user-scalable=no,width=device-width,initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <link rel="apple-touch-icon-precomposed" href="/touch-icon-iphone.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/touch-icon-ipad.png" />
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/touch-icon-iphone4.png" />
     <title>multi-repl</title>
     <link href="http://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet" type="text/css" />
     <style type="text/css">
@@ -15,7 +12,7 @@
       pre{margin:0;padding:0;}
       body,pre,input{font:18px/1.0 'Inconsolata',monospace;}
       #input{border:0;bottom:0;display:block;left:0px;padding:18px;position:absolute;}
-      #input{background:#000;color:#fff;font-weight:bold;}
+      #input{background:#000;color:#7491f1;font-weight:bold;text-shadow:#7491f1 0 0 3px;}
       #input{outline:none;}
       #output{padding:18px;overflow:auto;}
       .ansi-1{font-weight:bold;}/*bold*/
@@ -30,7 +27,7 @@
     </style>
   </head>
   <body>
-    <pre id="output">&gt;</pre>
+    <pre id="output">Welcome to multi-repl. Type something below!</pre>
     <form id="form"><input id="input" /></form>
     <script src="/dojo.js"></script>
     <script src="/socket.io.min.js"></script>
@@ -84,7 +81,6 @@
 
       var socket = new io.Socket('localhost', { port: 1337 });
       socket.on('message', function(message){
-        alert(message);
         append(ansi2html(message));
       });
       socket.connect();
