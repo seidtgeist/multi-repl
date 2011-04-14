@@ -53,6 +53,10 @@ Quick idea for possible feature & URL design:
 
     http://multi-repl-host/<repl_id>/<session_id>/
 
+### Ideas for examples
+
+Chat between to terminals using curl with named (lazy) pipes
+
 List of REPLs
 -------------
 
